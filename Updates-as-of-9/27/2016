@@ -25,3 +25,8 @@ I modified my variables to use grep and cut to extract what I would expect to se
 Date 11-30-15
 
 Modified launch daemon to run as root
+
+********** UPDATES **********
+Date 9-27-2016
+
+I have tested the Self Heal process against JSS 9.96 and still seeing success with the current process.  No changes have been made to this workflow at this time.
