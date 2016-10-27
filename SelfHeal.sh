@@ -98,9 +98,19 @@ fi
 
 sleep 5
 
-# Check to see if binary exists if not install it, if not, install the binary and eroll the client
-if [[ ! -f /usr/local/jamf/bin/jamf ]];
-	then echo "Downloading the quickadd package from the JSS ...." | addDate >> $logFile;
+jamf_size=0
+# Check if the binary exists, and get the size in 1k blocks (should be over 5K)
+if [[ -f /usr/local/jamf/bin/jamf ]];
+    then echo "Jamf binary exists, getting file size ...." | addDate >> $logFile;
+        jamf_size=$(du -ks /usr/local/jamf/bin/jamf | awk '{ print $1 }')
+        echo "Jamf binary is $jamf_size bytes ...." | addDate >> $logFile;
+fi
+
+# Checks the size of the jamf binary, and if it abnormally small, reinstall the binary and enroll the client
+# Checks if the file is at least 1M in size
+if [ $jamf_size -le 1000 ];
+	then echo "Jamf binary is abnormally small. Reinstalling ...." | addDate >> $logFile;
+        echo "Downloading the quickadd package from the JSS ...." | addDate >> $logFile;
 		curl -sk $jssUrl/quickadd.zip > $quickLocation | addDate >> $logFile;
 		echo "Download is complete ... Unpacking the quickadd package installer to /tmp/" | addDate >> $logFile;
 		unzip /tmp/quickadd.zip -d /tmp/ | addDate >> $logFile;
